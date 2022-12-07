@@ -1,23 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import "./App.css";
+import Auth from "./components/Auth";
+import Layout from "./components/Layout";
 
 function App() {
+  const cart= useSelector(state=>state.cart);
+  const isLoggedIn=useSelector((state)=>state.auth.isLoggedIn);
+  
+  useEffect(()=>{
+    fetch('https://redux-http-75711-default-rtdb.firebaseio.com/cartItems.json',{
+      method:'PUT',
+      body:JSON.stringify(cart)
+
+    })
+  },[cart])
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {!isLoggedIn && <Auth/>}
+      {isLoggedIn && <Layout />}
+       
     </div>
   );
 }
